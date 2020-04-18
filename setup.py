@@ -13,11 +13,11 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     packages=setuptools.find_packages(),
     classifiers=[
-        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.6",
         "Operating System :: Linux",
     ],
     include_package_data=True,
-    python_requires='>=3.7.3',
+    python_requires='>=3.6.9',
     install_requires=[
         'requests>=2.21.0',
         'beautifulsoup4>=4.6.3'
