@@ -96,7 +96,7 @@ class TouchstoneTests():
 
     def _get_session_tokens(self):
         response = requests.get(self.login_url)
-        soup = BeautifulSoup(response.text)
+        soup = BeautifulSoup(response.text, features="lxml")
         self.csrf_token = soup.find('input', {'name': '_csrf_token'}).get('value')
         self.cookies = response.cookies
     
@@ -203,7 +203,7 @@ class TouchstoneTests():
             Parsing assumes Touchstone's work is correct.
             """
             table_data = {}
-            soup = BeautifulSoup(init_response.text)
+            soup = BeautifulSoup(init_response.text, features="lxml")
             data_soup = soup.find_all('', {'class': 'review_data'})[0]
             field_soup = data_soup.find_all('th', 'import_field')
             for field in field_soup:
