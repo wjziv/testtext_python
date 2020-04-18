@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="alx",
+    name="touchstone",
     version="0.1",
     author="Walter Zielenski",
     author_email="walterzielenski@gmail.com",
