@@ -182,6 +182,8 @@ class TouchstoneTests():
 
         Todo:
             * Detect when there was an error auto-parsing data on the server.
+            * Detect when there are not enough headers in place
+            * Chunk oversize data on behalf of user?
             * Attempt to correct data headers on the client-side.
             * Automatically detect date-format
         """
