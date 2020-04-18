@@ -4,7 +4,7 @@ Created by watching requests go in and out of the website.
 
 ### Installation
 
-`pip install git+https://git@bitbucket.org/wjziv/touchstone_python.git@master`
+`pip install git+https://git@bitbucket.org/wjziv/touchstone_python.git@master#egg=touchstone`
 
 
 ### Touchstone Dashboarding
