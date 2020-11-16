@@ -99,7 +99,11 @@ class TestText():
     def request(self, *args, **kwargs):
         return self.session.request(*args, **kwargs)
 
-    def upload(self, file: Union[str, bytes, io.BytesIO], max_bytes=10000000):
+    def upload(
+        self,
+        file: Union[str, bytes, io.BytesIO, io.TextIOWrapper, io.BufferedReader],
+        max_bytes=10000000
+    ):
         """Upload a file by name or bytes.
         There are no file-formatting chceks on the client-side.
         Unknown server limit on filesize. Default maxsize is arbitrary.
@@ -109,7 +113,7 @@ class TestText():
         - Date formatting is expected as "YYYY-MM-DD"
 
         Arguments:
-            file {Union[str, bytes, io.BytesIO]} -- filename, bytestream, bytes
+            file {Union[str, bytes, io.BytesIO, io.TextIOWrapper, io.BufferedReader]} -- filename, bytestream, bytes, opened file wrapper
 
         Raises:
             ValueError: Invalid file argument
@@ -117,28 +121,30 @@ class TestText():
 
         def parse_file_type(f):
 
-            def check_file_size(file_obj):
-                if isinstance(file_obj, tuple):
-                    if sys.getsizeof(file_obj[1]) > max_bytes:
-                        raise ValueError(f'File too large. Max size: {max_bytes}')
+            def check_file_size(file_object):
+                if isinstance(file_object, tuple):
+                    too_big = sys.getsizeof(file_object[1]) > max_bytes
                 else:
-                    if sys.getsizeof(file_obj) > max_bytes:
-                        raise ValueError(f'File too large. Max size: {max_bytes}')
-                    return file_obj
+                    too_big = sys.getsizeof(file_object) > max_bytes
 
-            if isinstance(f, str):
+                if too_big:
+                    raise ValueError(f'File too large. Max size: {max_bytes}')
+
+            if isinstance(f, (io.TextIOWrapper, io.BufferedReader)):
+                pass
+            elif isinstance(f, str):
                 if f.rpartition('.')[-1].lower() == 'tsv' and len(f) > 4:
                     f = open(f, 'rb')
                 else:
                     f = ('filename.tsv', f)
-
             elif isinstance(f, bytes):
                 f = ('filename.tsv', f)
-            elif isinstance(f, io.Bytes):
+            elif isinstance(f, io.BytesIO):
                 f = ('filename.tsv', f.getvalue())
             else:
                 raise ValueError('file argument may only be string, bytes, or io.BytesIO object.')
-            return check_file_size(f)
+            check_file_size(f)
+            return f
 
         file = parse_file_type(file)
         upload_response = self.session.post(
@@ -154,6 +160,7 @@ class TestText():
             raise ValueError('Unsucccessful Upload.')
         else:
             results = {
-                'failures': 0  # TODO: Parse upload_response for error count.
+                'failures': 0,  # TODO: Parse upload_response for error count.
+                'response': upload_response
             }
             return results
