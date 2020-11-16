@@ -127,7 +127,7 @@ class TestText():
                     return file_obj
 
             if isinstance(f, str):
-                if f.rpartition('.').lower()[-1] == 'tsv' and len(f) > 4:
+                if f.rpartition('.')[-1].lower() == 'tsv' and len(f) > 4:
                     f = open(f, 'rb')
                 else:
                     f = ('filename.tsv', f)
