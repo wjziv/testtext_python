@@ -21,6 +21,6 @@ from testtext import TestText
 username = 'user'
 password = 'pass'
 
-with TestTest(username, password) as tt:
-    tt.upload_data('filename.tsv')
+with TestText(username, password) as tt:
+    tt.upload('filename.tsv')
 ```
