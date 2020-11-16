@@ -16,7 +16,7 @@ TestText only accepts valid TSV file formats at the moment.
 ##### Example Usage
 
 ```python
-from testtext import TestTest
+from testtext import TestText
 
 username = 'user'
 password = 'pass'

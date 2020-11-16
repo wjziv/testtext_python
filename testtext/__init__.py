@@ -93,7 +93,7 @@ class TestText():
         """
         self.session.close()
 
-    def _successful(self, response: requests.Respost, check: str):
+    def _successful(self, response: requests.Response, check: str):
         return check in response.text
 
     def request(self, *args, **kwargs):
