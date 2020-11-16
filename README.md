@@ -1,28 +1,26 @@
-# touchstone_python
-Unofficial API Wrapper for [Touchstone](touchstone.email) and [Touchstone Tests](touchstonetests.io).
+# testext_python
+Unofficial API Wrapper for [TestText](testtext.com).
 Created by watching requests go in and out of the website.
 
 ### Installation
 
-`pip install git+https://git@github.com/wjziv/touchstone_python.git@master#egg=touchstone`
+`pip install git+https://git@github.com/wjziv/testtext_python.git@master#egg=testtext`
 
 
-### Touchstone Dashboarding
+### TestText
 
-Coming Soon!
+The primary usage of this module at the time of deployment is to provide a method for automated data uploads to TestText as a means of keeping the Subject Line and SMS data up-to-date.
 
-### Touchstone Tests
-
-The primary usage of this module at the time of deployment is to provide a method for automated data uploads to Touchstone Tests as a means of keeping the Subject Line data up-to-date.
+TestText only accepts valid TSV file formats at the moment.
 
 ##### Example Usage
 
 ```python
-from touchstone import TouchstoneTests
+from testtext import TestTest
 
 username = 'user'
 password = 'pass'
 
-with TouchstoneTests(username, password) as ts:
-    ts.upload_data('filename.txt')
+with TestTest(username, password) as tt:
+    tt.upload_data('filename.tsv')
 ```
