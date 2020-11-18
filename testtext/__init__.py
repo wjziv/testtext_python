@@ -159,8 +159,7 @@ class TestText():
         if not self._successful(upload_response, self.upload_check):
             raise ValueError('Unsucccessful Upload.')
         else:
-            results = {
+            return {
                 'failures': 0,  # TODO: Parse upload_response for error count.
                 'response': upload_response
             }
-            return results
