@@ -161,8 +161,8 @@ class TestText():
 
         file = parse_file_type(file)
         upload_response = self.session.post(
-            self.url + self.email_upload_uri,
-            headers={'Referer': self.url + self.email_upload_uri},
+            self.url + upload_uri,
+            headers={'Referer': self.url + upload_uri},
             files={'file': file}
         )
 
