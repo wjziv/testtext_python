@@ -16,7 +16,8 @@ class TestText():
     url: str = 'https://testtext.com'
     start_uri: str = '/login'
     login_uri: str = '/login'
-    upload_uri: str = '/upload'
+    email_upload_uri: str = '/upload'
+    sms_upload_uri: str = '/uploadsms'
     start_check: str = ''
     login_check: str = 'Start Your Test'
     upload_check: str = 'ROLL BACK'
@@ -41,7 +42,8 @@ class TestText():
             url (str): root for all URLs
             start_uri (str): suffix to request session initialization
             login_uri (str): suffix to request session login
-            upload_uri (str): suffix to request session upload
+            email_upload_uri (str): suffix to request session email upload
+            sms_upload_uri (str): suffix to request session sms upload
             start_check (str): sub-string to search for which flags successful session-init.
             login_check (str): sub-string to search for which flags successful login.
             upload_check (str): sub-string to search for which flags successful upload.
@@ -102,7 +104,8 @@ class TestText():
     def upload(
         self,
         file: Union[str, bytes, io.BytesIO, io.TextIOWrapper, io.BufferedReader],
-        max_bytes=10000000
+        max_bytes=10000000,
+        content_type='email'
     ):
         """Upload a file by name or bytes.
         There are no file-formatting chceks on the client-side.
@@ -118,6 +121,14 @@ class TestText():
         Raises:
             ValueError: Invalid file argument
         """
+
+        def get_upload_uri(content_type: str):
+            if content_type.lower() == 'email':
+                return self.email_upload_uri
+            elif content_type.lower() == 'sms':
+                return self.sms_upload_uri
+            else:
+                raise ValueError('content_type must be either one of: ["email", "sms"]')
 
         def parse_file_type(f):
 
@@ -146,10 +157,12 @@ class TestText():
             check_file_size(f)
             return f
 
+        upload_uri = get_upload_uri(content_type)
+
         file = parse_file_type(file)
         upload_response = self.session.post(
-            self.url + self.upload_uri,
-            headers={'Referer': self.url + self.upload_uri},
+            self.url + self.email_upload_uri,
+            headers={'Referer': self.url + self.email_upload_uri},
             files={'file': file}
         )
 
