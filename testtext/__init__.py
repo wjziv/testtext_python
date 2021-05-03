@@ -98,12 +98,24 @@ class TestText():
     def _successful(self, response: requests.Response, check: str):
         return check in response.text
 
+    def _get_failure_reason(self, response: requests.Response, content_type: str):
+        if response.text == 'unauthorized':
+            detail = ' (sms upload might not be permitted)' if content_type.lower() == 'sms' else ''
+            return 'unauthorized' + detail
+
+        soup = BeautifulSoup(response.content, 'html.parser')
+        result = soup.find('div', {'role': 'alert'})
+        if result:
+            return result.get_text(strip=True)
+        else:
+            return 'Unknown reason.'
+
     def request(self, *args, **kwargs):
         return self.session.request(*args, **kwargs)
 
     def upload(
         self,
-        file: Union[str, bytes, io.BytesIO, io.TextIOWrapper, io.BufferedReader],
+        file_data: Union[str, bytes, io.BytesIO, io.TextIOWrapper, io.BufferedReader],
         max_bytes=10000000,
         content_type='email'
     ):
@@ -159,18 +171,19 @@ class TestText():
 
         upload_uri = get_upload_uri(content_type)
 
-        file = parse_file_type(file)
+        file_data = parse_file_type(file_data)
         upload_response = self.session.post(
             self.url + upload_uri,
             headers={'Referer': self.url + upload_uri},
-            files={'file': file}
+            files={'file': file_data}
         )
 
-        if isinstance(file, (io.TextIOWrapper, io.BufferedReader)):
-            file.close()
+        if isinstance(file_data, (io.TextIOWrapper, io.BufferedReader)):
+            file_data.close()
 
         if not self._successful(upload_response, self.upload_check):
-            raise ValueError('Unsucccessful Upload.')
+            reason = self._get_failure_reason(upload_response, content_type)
+            raise ValueError(f'Unsucccessful Upload: {reason}')
         else:
             return {
                 'failures': 0,  # TODO: Parse upload_response for error count.
