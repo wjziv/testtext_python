@@ -66,6 +66,8 @@ class TestText():
         Along with the username and password, a CSRF token is necessary for the initial payload.
         This is obtained in a quick visit to the main page.
         """
+        if not self.username and self.password:
+            raise ValueError(f'Unsuccessful Login. Missing either/both user/pass. (username: {self.username})')
 
         def get_csrf_token(response: requests.Response):
             token_soup = (
@@ -87,7 +89,7 @@ class TestText():
         if not self._successful(start_response, self.start_check):
             raise ValueError(f'Unsuccessful Session Init. Is this the correct URL?:\n{self.url}')
         if not self._successful(login_response, self.login_check):
-            raise ValueError('Unsuccessful Login. Check the provided credentials.')
+            raise ValueError(f'Unsuccessful Login. Check the provided credentials. (username: {self.username})')
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
