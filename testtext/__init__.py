@@ -71,7 +71,7 @@ class TestText():
 
         def get_csrf_token(response: requests.Response):
             token_soup = (
-                BeautifulSoup(start_response.content, 'html.parser')
+                BeautifulSoup(response.content, 'html.parser')
                 .find('input', {'name': 'csrf_token'})
             ) or {}
             return token_soup.get('value')
